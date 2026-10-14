@@ -12,7 +12,7 @@ const years = new Date().getFullYear() - clinic.founded;
 
 const callBtn = (cls = 'btn--go', label = `Call ${clinic.phone}`) =>
   `<a class="btn ${cls}" href="${clinic.phoneHref}">${icon('phone')}<span>${label}</span></a>`;
-const emailBtn = (cls = 'btn--line', label = 'Email the surgery') =>
+const emailBtn = (cls = 'btn--line', label = 'Email the practice') =>
   `<a class="btn ${cls}" href="mailto:${clinic.email}">${icon('mail')}<span>${label}</span></a>`;
 const directionsBtn = (cls = 'btn--line') =>
   `<a class="btn ${cls}" href="${clinic.directionsUrl}" target="_blank" rel="noopener">${icon('navigation')}<span>Get directions</span></a>`;
@@ -68,7 +68,7 @@ function openStatus() {
 
 const statusPill = (s = openStatus(), cls = '') => `<span class="pill ${s.open ? 'is-open' : ''} ${cls}"><span class="dot"></span>${s.text}</span>`;
 
-// "Today's line": the day as stops on a route — surgery sessions, then out-of-hours cover.
+// "Today's line": the day as stops on a route — appointment sessions, then out-of-hours cover.
 function todayLine() {
   const { day, mins } = dublinNow();
   const today = hours.find((h) => h.day === day);
@@ -84,10 +84,10 @@ function todayLine() {
   return `
   <div class="line-card">
     <div class="line-card__head">
-      <span class="line-card__k">${today.label} at the surgery</span>
+      <span class="line-card__k">Today · ${today.label}</span>
       ${statusPill(openStatus(), 'pill--dark')}
     </div>
-    ${weekend ? `<p class="line-card__note">${icon('info')}No surgery today${day === 6 ? ' (Saturday surgery is suspended)' : ''}. Out-of-hours cover for registered patients:</p>` : ''}
+    ${weekend ? `<p class="line-card__note">${icon('info')}No appointments today${day === 6 ? ' (Saturday opening is suspended)' : ''}. Out-of-hours cover for registered patients:</p>` : ''}
     <ol class="line">
       ${stops.map((s, i) => `
         <li class="line__stop line__stop--${s.kind}${i === current ? ' is-now' : ''}">
@@ -136,7 +136,7 @@ function visitBlock() {
         ${luasSign()}
         <dl class="facts">
           <div><dt>${icon('mapPin')}Address</dt><dd>${clinic.addressText}<button type="button" class="link" data-copy="${esc(clinic.addressText)}">${icon('copy')}Copy address</button></dd></div>
-          <div><dt>${icon('train')}By Luas</dt><dd>Green Line to Beechwood. The surgery is next to the stop.</dd></div>
+          <div><dt>${icon('train')}By Luas</dt><dd>Green Line to Beechwood. The practice is next to the stop.</dd></div>
           <div><dt>${icon('phone')}Phone</dt><dd><a href="${clinic.phoneHref}">${clinic.phone}</a></dd></div>
           <div><dt>${icon('mail')}Email</dt><dd><a href="mailto:${clinic.email}">${clinic.email}</a></dd></div>
         </dl>
@@ -172,7 +172,7 @@ function outOfHoursBlock(withHead = true) {
   </section>`;
 }
 
-function callout(title = 'To book, just call.', text = 'Appointments are made by phone during surgery hours.') {
+function callout(title = 'To book, just call.', text = 'Appointments are made by phone during opening hours.') {
   return `
   <section class="callout">
     <div class="wrap callout__inner" data-reveal>
@@ -207,7 +207,7 @@ function renderHome() {
       <div class="hero__copy">
         ${stop(`Ranelagh · Dublin 6 · since ${clinic.founded}`)}
         <h1 class="title-hero">Your GP on <span>Dunville Avenue.</span></h1>
-        <p class="hero__lead">${clinic.doctor} has looked after patients in Ranelagh since ${clinic.founded}. Morning and evening surgery, Monday to Friday, right next to Beechwood Luas.</p>
+        <p class="hero__lead">${clinic.doctor} has looked after patients in Ranelagh since ${clinic.founded}. Morning and evening appointments, Monday to Friday, right next to Beechwood Luas.</p>
         <div class="actions">${callBtn('btn--go btn--big')}<a class="btn btn--line btn--big" href="#/contact" data-scroll="book">${icon('calendar')}<span>How to book</span></a></div>
         ${rating()}
       </div>
@@ -218,9 +218,9 @@ function renderHome() {
   <section class="signs" aria-label="At a glance">
     <div class="wrap signs__row">
       <div class="sign"><b>${clinic.founded}</b><span>Caring for Ranelagh for ${years} years</span></div>
-      <div class="sign"><b>2</b><span>Surgery sessions a day, until 6.30pm</span></div>
+      <div class="sign"><b>2</b><span>Appointment sessions a day, until 6.30pm</span></div>
       <div class="sign"><b>€55</b><span>GP visit. Medical cards accepted</span></div>
-      <div class="sign sign--green"><b>${icon('train')}</b><span>Next to Beechwood Luas, Green Line</span></div>
+      <div class="sign sign--blue"><b>${icon('train')}</b><span>Next to Beechwood Luas, Green Line</span></div>
     </div>
   </section>
 
@@ -295,7 +295,7 @@ function renderAbout() {
   </section>
   <section class="block block--tight">
     <div class="wrap">
-      <div class="photo-slot" data-reveal role="img" aria-label="Space for a photo of the surgery">${icon('home')}<span>Photo of the surgery and waiting room</span></div>
+      <div class="photo-slot" data-reveal role="img" aria-label="Space for a photo of the practice">${icon('home')}<span>Photo of the practice and waiting room</span></div>
     </div>
   </section>
   ${callout('See Dr Nikrow.', `Call ${clinic.phone} to make an appointment.`)}`;
@@ -337,7 +337,7 @@ function renderServices(sub) {
       <div>${freeList()}</div>
     </div>
   </section>
-  ${callout('Not sure if we can help?', `Call the surgery on ${clinic.phone} and ask.`)}`;
+  ${callout('Not sure if we can help?', `Call the practice on ${clinic.phone} and ask.`)}`;
 }
 
 function renderHours() {
@@ -345,7 +345,7 @@ function renderHours() {
   ${pageHead({
     crumb: 'Opening times',
     title: 'Opening times.',
-    lead: 'Monday to Friday, two surgery sessions a day, by appointment. Appointments out of normal hours can at times be given if needed.',
+    lead: 'Monday to Friday, two appointment sessions a day. Appointments out of normal hours can at times be given if needed.',
     actions: callBtn() + statusPill(),
   })}
   <section class="block block--tight">
@@ -385,14 +385,14 @@ function renderFees() {
       ${feeBoard(outOfHours.map((o) => ({ name: o.name, price: o.price, note: o.free })))}
     </div>
   </section>
-  ${callout('Questions about a fee?', `Call the surgery on ${clinic.phone}.`)}`;
+  ${callout('Questions about a fee?', `Call the practice on ${clinic.phone}.`)}`;
 }
 
 function renderContact() {
   return `
   ${pageHead({
     crumb: 'Contact',
-    title: 'Contact the surgery.',
+    title: 'Contact the practice.',
     lead: `${clinic.addressText}. Next to Beechwood Luas.`,
     actions: callBtn() + emailBtn(),
   })}
@@ -401,7 +401,7 @@ function renderContact() {
       <div class="book" id="book" data-reveal>
         ${stop('Appointments')}
         <h2 class="title-lg">Book by phone.</h2>
-        <p class="intro">To make an appointment, please call the surgery. Appointments are not made by email.</p>
+        <p class="intro">To make an appointment, please call the practice. Appointments are not made by email.</p>
         <a class="book__phone" href="${clinic.phoneHref}">${icon('phone')}<span><small>Call</small>${clinic.phone}</span></a>
         <p class="muted">Monday to Friday, 10am – 1.30pm and 4pm – 6.30pm. ${statusPill()}</p>
       </div>
@@ -416,7 +416,7 @@ function renderContact() {
           <span class="card__v">${clinic.fax}</span>
         </div>
         <a class="card card--night" href="#/hours" data-scroll="out-of-hours" data-reveal>
-          <span class="card__k">${icon('moon')}Surgery closed?</span>
+          <span class="card__k">${icon('moon')}Practice closed?</span>
           <span class="card__v">Luke Doc · GP 24</span>
           <span>Out-of-hours care for registered patients</span>
         </a>
@@ -429,7 +429,7 @@ function renderContact() {
         <div>
           ${stop('Send a message')}
           <h2 class="title-md">A general question?</h2>
-          <p class="muted">Write it here and we’ll open an email to the surgery, ready to send from your email app. Please don’t use this for appointments or anything urgent: call ${clinic.phone}.</p>
+          <p class="muted">Write it here and we’ll open an email to the practice, ready to send from your email app. Please don’t use this for appointments or anything urgent: call ${clinic.phone}.</p>
         </div>
         <form class="form" id="msg-form" novalidate>
           <div class="form__row">
@@ -464,7 +464,7 @@ function renderContact() {
 function renderNotFound() {
   return pageHead({
     crumb: 'Page not found', title: 'Wrong stop.',
-    lead: 'We couldn’t find that page. It may have moved. Try one of the links above, or call the surgery.',
+    lead: 'We couldn’t find that page. It may have moved. Try one of the links above, or call the practice.',
     actions: `<a class="btn btn--dark" href="#/">Back to home</a>${callBtn('btn--line')}`,
   });
 }
@@ -522,7 +522,7 @@ function renderFooter() {
         <ul>${nav.map((n) => `<li><a href="#/${n.path}">${n.label}</a></li>`).join('')}</ul>
       </div>
       <div>
-        <h2 class="footer__title">Surgery hours</h2>
+        <h2 class="footer__title">Opening hours</h2>
         <ul class="footer__hours">
           <li>Mon – Fri, morning<span>10am – 1.30pm</span></li>
           <li>Mon – Fri, evening<span>4pm – 6.30pm</span></li>
